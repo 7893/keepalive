@@ -1,6 +1,6 @@
 {
   "name": "keepalive-worker",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Cloudflare Worker for scheduled Supabase, Oracle, and IBM Db2 keepalive checks.",
   "private": true,
   "license": "MIT",
