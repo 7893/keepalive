@@ -5,10 +5,19 @@
   "private": true,
   "license": "MIT",
   "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
+    "build": "wrangler deploy --dry-run --outdir dist",
     "check": "npm run check:structure && npm run check:secrets",
     "check:structure": "node scripts/check-structure.mjs",
     "check:secrets": "node scripts/check-secrets.mjs",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
     "test": "node test/run-tests.js"
+  },
+  "devDependencies": {
+    "wrangler": "4.136.3"
   }
 }

@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [20, 22, 24]
+        node-version: [22, 24]
 
     steps:
       - name: Check out repository
@@ -31,8 +31,14 @@ jobs:
           node-version: ${{ matrix.node-version }}
           package-manager-cache: false
 
+      - name: Install locked development tools
+        run: npm ci
+
       - name: Check syntax, structure, and committed secrets
         run: npm run check
 
       - name: Run tests
         run: npm test
+
+      - name: Validate Cloudflare Worker bundle
+        run: npm run build

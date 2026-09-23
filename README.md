@@ -32,7 +32,7 @@ modules directly under `src/`.
 
 ## Requirements
 
-- Node.js 20 or newer for local checks
+- Node.js 22 or newer for the pinned Wrangler toolchain
 - A Cloudflare Workers account and Wrangler CLI for local execution/deployment
 - Credentials for only the services you intend to use
 
@@ -41,9 +41,10 @@ The repository has no runtime npm dependencies.
 ## Local development
 
 ```sh
+npm ci
 cp .env.example .dev.vars
 # Replace placeholder values in .dev.vars.
-npx wrangler dev
+npm run dev
 ```
 
 Never commit `.dev.vars` or `.env`; both are ignored.
@@ -53,7 +54,10 @@ Run all local checks:
 ```sh
 npm run check
 npm test
+npm run build
 ```
+
+`npm run build` runs a Wrangler dry-run bundle and never deploys the Worker.
 
 Tests replace outbound `fetch` calls with local mocks and do not contact real
 Supabase, Oracle, IBM, or Cloudflare endpoints.
@@ -119,8 +123,8 @@ Administrative requests use `Authorization: Bearer <TRIGGER_SECRET>`.
 ## Deployment
 
 Review `wrangler.jsonc`, provision every required secret, run the checks, and
-then deploy through your normal reviewed Cloudflare workflow. The configured
-cron schedules run three times per day.
+then deploy through your normal reviewed Cloudflare workflow with
+`npm run deploy`. The configured cron schedules run three times per day.
 
 ## Contributing and security
 
