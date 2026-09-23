@@ -97,5 +97,5 @@ test("scheduled execution reaches every adapter using only mocked upstreams", as
   assert.ok(urls.some(url => url.startsWith(FULL_ENV.SUPABASE_URL)));
   assert.ok(urls.some(url => url.startsWith(FULL_ENV.OCI_ADB_US_URL)));
   assert.ok(urls.some(url => url.startsWith(FULL_ENV.OCI_ADB_JP_URL)));
-  assert.ok(urls.some(url => url.includes("api.db2.cloud.ibm.com")));
+  assert.ok(urls.some(url => new URL(url).hostname === "api.db2.cloud.ibm.com"));
 });

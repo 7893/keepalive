@@ -100,7 +100,11 @@ test("public rendering escapes stored data and masks IP addresses", async () => 
     assert.match(html, /&lt;img src=x onerror=alert\(1\)&gt;/);
     assert.match(html, /203\.0\.113\.xxx/);
     assert.ok(!html.includes("203.0.113.42"));
-    const browserScript = html.match(/<script>([\s\S]*)<\/script>/)?.[1];
+    const scriptStart = html.indexOf("<script>");
+    const scriptEnd = html.indexOf("</script>", scriptStart);
+    assert.notEqual(scriptStart, -1);
+    assert.notEqual(scriptEnd, -1);
+    const browserScript = html.slice(scriptStart + "<script>".length, scriptEnd);
     assert.ok(browserScript);
     assert.doesNotThrow(() => new Script(browserScript));
 
