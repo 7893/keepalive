@@ -9,6 +9,7 @@ status dashboard with masked IP addresses by default.
 - Scheduled and authenticated manual keepalive runs
 - Supabase, Oracle ORDS, and IBM Db2 adapters
 - Public dashboard and paginated JSON API
+- 60-second edge caching and per-client rate limiting for public reads
 - Fail-closed administrative routes
 - Upstream request timeouts and structured error responses
 - Default IP masking and HTML escaping
@@ -83,6 +84,22 @@ Supabase, Oracle, IBM, or Cloudflare endpoints.
 `DB2_INSTANCE_ID` is accepted as a backward-compatible alternative to
 `DB2_DEPLOYMENT_ID`.
 
+### Public endpoint protection
+
+Successful `GET /` and `GET /api/data` responses are cached for 60 seconds in
+the Cloudflare data center that handled the request. Cache keys discard unknown
+query parameters, normalize page aliases, and keep masked and full-IP output in
+separate variants. Error responses and all administrative routes remain
+uncached.
+
+The `PUBLIC_RATE_LIMITER` binding allows 120 requests per minute for each
+client and public route in a Cloudflare location. Client addresses are hashed
+before they are used as limiter keys and are not written to application logs.
+The binding fails open if Cloudflare's limiter is temporarily unavailable so
+the status page remains reachable. The `namespace_id` in `wrangler.jsonc` must
+be unique within the deploying Cloudflare account; change it before deployment
+if `7893001` is already used by another Worker rate-limit binding.
+
 ## Database initialization
 
 These migrations are bootstrap files for new self-hosted installations. An
@@ -122,9 +139,11 @@ Administrative requests use `Authorization: Bearer <TRIGGER_SECRET>`.
 
 ## Deployment
 
-Review `wrangler.jsonc`, provision every required secret, run the checks, and
-then deploy through your normal reviewed Cloudflare workflow with
-`npm run deploy`. The configured cron schedules run three times per day.
+Review `wrangler.jsonc` (including the rate-limit namespace), provision every
+required secret, run the checks, and then deploy through your normal reviewed
+Cloudflare workflow with `npm run deploy`. The configured cron schedules run
+three times per day. The compatibility date is `2026-09-23`; updating it takes
+effect only on the next deployment.
 
 ## Contributing and security
 

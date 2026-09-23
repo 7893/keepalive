@@ -23,8 +23,8 @@ export function jsonResponse(payload, status = 200, extraHeaders = {}) {
   });
 }
 
-export function errorResponse(status, code, message) {
-  return jsonResponse({ success: false, error: code, message }, status);
+export function errorResponse(status, code, message, extraHeaders = {}) {
+  return jsonResponse({ success: false, error: code, message }, status, extraHeaders);
 }
 
 export function methodNotAllowed(allowed) {
