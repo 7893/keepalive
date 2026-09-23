@@ -1,5 +1,6 @@
 node_modules/
 .wrangler/
+dist/
 coverage/
 
 # Local Cloudflare and application secrets
