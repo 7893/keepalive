@@ -81,6 +81,11 @@ Supabase, Oracle, IBM, or Cloudflare endpoints.
 
 ## Database initialization
 
+These migrations are bootstrap files for new self-hosted installations. An
+existing deployment with working tables does not need to run them again. Review
+the SQL against your current schema and permission model before applying it to
+an existing database.
+
 Apply the versioned SQL files before the first keepalive run:
 
 - `migrations/supabase/001_create_keepalive_tables.sql` once in Supabase;

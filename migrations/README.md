@@ -1,5 +1,9 @@
 # Database initialization
 
+> These migrations are for new self-hosted installations. Do not run them on an
+> existing production database unless you have reviewed the schema and grants
+> and intentionally want to reconcile that deployment.
+
 The Worker stores Supabase and Db2 health events in Supabase. Oracle health
 events are stored in each Oracle database through ORDS.
 
