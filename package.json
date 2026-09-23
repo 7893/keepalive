@@ -1,0 +1,14 @@
+{
+  "name": "keepalive-worker",
+  "version": "0.1.0",
+  "description": "Cloudflare Worker for scheduled Supabase, Oracle, and IBM Db2 keepalive checks.",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "check": "npm run check:structure && npm run check:secrets",
+    "check:structure": "node scripts/check-structure.mjs",
+    "check:secrets": "node scripts/check-secrets.mjs",
+    "test": "node test/run-tests.js"
+  }
+}
