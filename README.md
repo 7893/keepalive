@@ -33,7 +33,7 @@ modules directly under `src/`.
 
 ## Requirements
 
-- Node.js 22 or newer for the pinned Wrangler toolchain
+- Node.js 26.10.0 and npm 11.19.1 (pinned in `.tool-versions` and `package.json`)
 - A Cloudflare Workers account and Wrangler CLI for local execution/deployment
 - Credentials for only the services you intend to use
 
