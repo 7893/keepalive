@@ -33,7 +33,7 @@ modules directly under `src/`.
 
 ## Requirements
 
-- Node.js 22 or newer for the pinned Wrangler toolchain
+- Node.js 26.10.0 and npm 11.19.1 (pinned in `.tool-versions` and `package.json`)
 - A Cloudflare Workers account and Wrangler CLI for local execution/deployment
 - Credentials for only the services you intend to use
 
@@ -95,8 +95,8 @@ uncached.
 The `PUBLIC_RATE_LIMITER` binding allows 120 requests per minute for each
 client and public route in a Cloudflare location. Client addresses are hashed
 before they are used as limiter keys and are not written to application logs.
-The binding fails open if Cloudflare's limiter is temporarily unavailable so
-the status page remains reachable. The `namespace_id` in `wrangler.jsonc` must
+The binding returns 503 before database access if protection is missing or
+Cloudflare's limiter is unavailable. The `namespace_id` in `wrangler.jsonc` must
 be unique within the deploying Cloudflare account; change it before deployment
 if `7893001` is already used by another Worker rate-limit binding.
 
