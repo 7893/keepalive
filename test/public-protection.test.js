@@ -41,6 +41,7 @@ test("successful public GET responses are cached at the edge", async () => {
     }
   };
   const env = {
+    PUBLIC_RATE_LIMITER: { limit: async () => ({ success: true }) },
     SUPABASE_URL: "https://supabase.test",
     SUPABASE_SECRET_KEY: "test-key"
   };
@@ -113,4 +114,15 @@ test("public errors remain uncached", async () => {
   });
 
   assert.equal(puts, 0);
+});
+
+
+test("missing or failed public protection never reaches upstream", async () => {
+  await withMockedFetch(async () => { throw new Error("unexpected upstream access"); }, async () => {
+    for (const env of [{}, { PUBLIC_RATE_LIMITER: { limit: async () => { throw new Error("offline"); } } }]) {
+      const response = await worker.fetch(request("/api/data?service=supabase"), env, {});
+      assert.equal(response.status, 503);
+      assert.equal((await response.json()).error, "protection_unavailable");
+    }
+  });
 });

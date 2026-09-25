@@ -1,3 +1,4 @@
+const PUBLIC_ENV = { PUBLIC_RATE_LIMITER: { limit: async () => ({ success: true }) } };
 import test from "node:test";
 import assert from "node:assert/strict";
 import { Script } from "node:vm";
@@ -50,7 +51,7 @@ test("public API rejects unknown services without touching upstreams", async () 
     fetchCalls += 1;
     throw new Error("unexpected fetch");
   }, async () => {
-    const response = await worker.fetch(request("/api/data?service=unknown"), {}, {});
+    const response = await worker.fetch(request("/api/data?service=unknown"), PUBLIC_ENV, {});
     assert.equal(response.status, 400);
     assert.equal(fetchCalls, 0);
   });
@@ -80,7 +81,7 @@ test("public rendering escapes stored data and masks IP addresses", async () => 
     });
   };
 
-  const env = {
+  const env = { ...PUBLIC_ENV,
     SUPABASE_URL: "https://supabase.test",
     SUPABASE_SECRET_KEY: "supabase-test-key",
     OCI_ADB_US_URL: "https://adb-us.test",
@@ -117,7 +118,7 @@ test("public rendering escapes stored data and masks IP addresses", async () => 
 
 test("upstream failures return an error status instead of false success", async () => {
   await withMockedFetch(async () => new Response("failed", { status: 500 }), async () => {
-    const env = { SUPABASE_URL: "https://supabase.test", SUPABASE_SECRET_KEY: "key" };
+    const env = { ...PUBLIC_ENV, SUPABASE_URL: "https://supabase.test", SUPABASE_SECRET_KEY: "key" };
     const response = await worker.fetch(request("/api/data?service=supabase"), env, {});
     const body = await response.json();
     assert.equal(response.status, 502);

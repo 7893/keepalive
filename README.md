@@ -153,3 +153,8 @@ issues privately as described in [SECURITY.md](SECURITY.md).
 ## License
 
 Licensed under the [MIT License](LICENSE).
+
+Public reads require the `PUBLIC_RATE_LIMITER` binding. Missing configuration or
+limiter failures return 503 before database access; this intentionally prioritizes
+resource protection over availability. Cloudflare limits are per location, not a
+global spending cap. Administrative authentication is independent of this limiter.

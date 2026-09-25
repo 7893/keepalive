@@ -43,7 +43,9 @@ async function rateLimitKey(request, pathname) {
 }
 
 async function rateLimitResponse(request, env, pathname) {
-  if (typeof env.PUBLIC_RATE_LIMITER?.limit !== "function") return null;
+  if (typeof env.PUBLIC_RATE_LIMITER?.limit !== "function") {
+    return errorResponse(503, "protection_unavailable", "Public request protection is unavailable.");
+  }
 
   try {
     const key = await rateLimitKey(request, pathname);
@@ -54,7 +56,7 @@ async function rateLimitResponse(request, env, pathname) {
     });
   } catch (error) {
     logError("public_rate_limit_error", { error: error instanceof Error ? error.message : "unknown_error" });
-    return null;
+    return errorResponse(503, "protection_unavailable", "Public request protection is unavailable.");
   }
 }
 

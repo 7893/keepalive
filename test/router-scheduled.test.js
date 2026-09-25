@@ -1,3 +1,4 @@
+const PUBLIC_ENV = { PUBLIC_RATE_LIMITER: { limit: async () => ({ success: true }) } };
 import test from "node:test";
 import assert from "node:assert/strict";
 import worker from "../src/index.js";
@@ -10,7 +11,7 @@ test("router returns stable errors without contacting unconfigured services", as
     fetchCalls += 1;
     throw new Error("unexpected fetch");
   }, async () => {
-    const missingData = await worker.fetch(request("/api/data?service=supabase"), {}, {});
+    const missingData = await worker.fetch(request("/api/data?service=supabase"), PUBLIC_ENV, {});
     assert.equal(missingData.status, 503);
     assert.deepEqual((await missingData.json()).missing, ["SUPABASE_URL", "SUPABASE_SECRET_KEY"]);
 
@@ -28,7 +29,7 @@ test("router returns stable errors without contacting unconfigured services", as
     );
     assert.equal(missingClean.status, 503);
 
-    const head = await worker.fetch(request("/", { method: "HEAD" }), {}, {});
+    const head = await worker.fetch(request("/", { method: "HEAD" }), PUBLIC_ENV, {});
     assert.equal(head.status, 200);
     assert.equal(await head.text(), "");
 
